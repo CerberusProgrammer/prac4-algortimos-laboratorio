@@ -10,12 +10,14 @@ public class Alumno {
     int tiempoEntrada;
     int tiempoEspera;
     int tiempoTotal;
+    boolean atendido;
     String atendidoPor;
 
     public Alumno(String nombre, int tiempoEntrada, int tiempoCola, String atendidoPor) {
         this.id = size;
         this.nombre = nombre;
         this.tiempoEntrada = tiempoEntrada;
+        this.tiempoEspera = tiempoCola;
         this.tiempoCola = tiempoCola;
         this.atendidoPor = atendidoPor;
         size++;
@@ -88,17 +90,31 @@ public class Alumno {
         this.atendidoPor = atendidoPor;
     }
 
+    public static int getSize() {
+        return size;
+    }
+
+    public static void setSize(int size) {
+        Alumno.size = size;
+    }
+
+    public boolean isAtendido() {
+        return atendido;
+    }
+
+    public void setAtendido(boolean atendido) {
+        this.atendido = atendido;
+    }
+
     @Override
     public String toString() {
-        return "Alumno{" +
-                "tiempoCola=" + tiempoCola +
-                ", id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", tiempoEntrada=" + tiempoEntrada +
-                ", tiempoEspera=" + tiempoEspera +
-                ", tiempoTotal=" + tiempoTotal +
-                ", atendidoPor='" + atendidoPor + '\'' +
-                '}';
+        return "id=" + id +
+                ", name='" + nombre + '\'' +
+                ", entrada=" + tiempoEntrada +
+                ", espera=" + tiempoEspera +
+                ", total=" + tiempoTotal +
+                ", atendido=" + atendido +
+                ", psico='" + atendidoPor;
     }
 }
 

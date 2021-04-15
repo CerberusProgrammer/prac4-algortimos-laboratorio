@@ -1,6 +1,8 @@
 package sample;
 
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextArea;
 
 import java.net.URL;
 import java.util.Random;
@@ -10,13 +12,21 @@ public class Controller implements Initializable {
 
     Queue<Alumno> pendiente = new Queue<>();
     Queue<Alumno> completo = new Queue<>();
+    Queue<Alumno> general = new Queue<>();
 
     Queue<Alumno> psicologa1 = new Queue<>();
     Queue<Alumno> psicologa2 = new Queue<>();
 
+    @FXML
+    private TextArea textGeneral;
+    @FXML
+    private TextArea textPendiente;
+    @FXML
+    private TextArea textAtendidos;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        for (int minutos = 0; minutos < 480; minutos++) {
+        for (int minutos = 0; minutos < 150; minutos++) {
 
             int valorDado = (int) ((Math.random() * 100) + 1);
 
@@ -28,6 +38,7 @@ public class Controller implements Initializable {
                 Alumno alumno = new Alumno(
                         nombre, minutos, tiempoEspera, psico);
 
+                general.insert(alumno);
                 pendiente.insert(alumno);
             }
 
@@ -38,6 +49,7 @@ public class Controller implements Initializable {
                     psicologa1.front().getInfo().setTiempoTotal(
                             minutos - psicologa1.front().getInfo().getTiempoEntrada()
                     );
+                    psicologa1.front().getInfo().setAtendido(true);
                     completo.insert(psicologa1.remove().getInfo());
                 }
                 else
@@ -51,6 +63,7 @@ public class Controller implements Initializable {
                     psicologa2.front().getInfo().setTiempoTotal(
                             minutos - psicologa2.front().getInfo().getTiempoEntrada()
                     );
+                    psicologa2.front().getInfo().setAtendido(true);
                     completo.insert(psicologa2.remove().getInfo());
                 }
                 else
@@ -65,23 +78,36 @@ public class Controller implements Initializable {
             }
         }
 
-        int size = pendiente.size();
-        for (int i = 0; i < size; i++) {
-            System.out.println(pendiente.remove().getInfo());
-        }
+        generarPendiente();
+
+        while (!pendiente.isEmpty())
+            textPendiente.appendText(pendiente.remove().getInfo().toString() + "\n");
+
+        while (!completo.isEmpty())
+            textAtendidos.appendText(completo.remove().getInfo().toString() + "\n");
+
+        while (!general.isEmpty())
+            textGeneral.appendText(general.remove().getInfo().toString() + "\n");
+    }
+
+    void generarPendiente() {
+        while (!psicologa1.isEmpty())
+            pendiente.insert(psicologa1.remove().getInfo());
+
+        while (!psicologa2.isEmpty())
+            pendiente.insert(psicologa2.remove().getInfo());
     }
 
     String generarID() {
-        Random random = new Random();
-        String a = "" + (char)(random.nextInt(91) + 65);
-        String b = "" + (char)(random.nextInt(91) + 65);
-        String c = "" + (char)(random.nextInt(91) + 65);
-        return a + b + c;
+        return "" + (char) ((Math.random() * 25) + 65) +
+                (char) ((Math.random() * 25) + 65) +
+                (char) ((Math.random() * 25) + 65);
     }
 
     String generarPsicologa() {
-        int valor = (int) (Math.random() * 1);
-        if (valor == 0)
+        double valor = Math.random();
+
+        if (valor > 0.5)
             return "Valeria Zamanda";
         else
             return "Alicia Perez";
